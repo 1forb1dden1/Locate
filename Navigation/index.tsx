@@ -1,10 +1,4 @@
-import {
-  FontAwesome,
-  Entypo,
-  AntDesign,
-  Ionicons,
-  Feather,
-} from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
@@ -42,6 +36,7 @@ function BottomTabNavigator() {
         name="Map"
         component={MapScreen}
         options={{
+          title: "Map",
           headerShown: false,
           tabBarIcon: () => (
             <Ionicons name="md-map-outline" size={24} color="black" />
@@ -52,7 +47,7 @@ function BottomTabNavigator() {
         name="Data"
         component={DataScreen}
         options={{
-          title: "DataScreen",
+          title: "Data",
           headerShown: false,
           tabBarIcon: () => <Feather name="database" size={24} color="black" />,
           /*headerStyle: {
