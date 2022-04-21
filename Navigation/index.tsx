@@ -8,7 +8,7 @@ import MapScreen from "../Screens/MapScreen";
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <RootNavigator />
+      <RootNavigator/>
     </NavigationContainer>
   );
 }
