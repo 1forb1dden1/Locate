@@ -9,7 +9,6 @@ export default function App(){
   const [hasSavePermission, setHasSavePermission] = useState<any>(null);
   const [camera, setCamera] = useState<any>(null);
   const [status, setrequestPermission] = MediaLibrary.usePermissions();
-  // const [status, setrequestPermission] = useState(MediaLibrary.usePermissions(null));
   const [image,setImage] = useState<any>(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
@@ -18,7 +17,7 @@ export default function App(){
       const  CameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(CameraStatus.status === 'granted');
       const SaveStatus = await MediaLibrary.requestPermissionsAsync();
-      setrequestPermission(SaveStatus.status === 'granted');
+      setrequestPermission();
     })();
   }, []);
   
@@ -28,7 +27,7 @@ export default function App(){
       let data = await camera.takePictureAsync(options);
       console.log(data.uri)
       setImage(data.uri);
-      const status = await MediaLibrary.getPermissionsAsync(true);//Question!!！Why can't get the permission of saving.
+      const status = await MediaLibrary.getPermissionsAsync(true);
       console.log(status);
       if (status === null){
           return;
