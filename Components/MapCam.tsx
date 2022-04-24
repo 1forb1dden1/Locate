@@ -14,10 +14,10 @@ export default function App() {
   const [hasCameraPermission, setHasCameraPermission] = useState<any>(null);
   const [SaveStatus, RequestSavePermission] = MediaLibrary.usePermissions();
   const [camera, setCamera] = useState<any>(null);
-  const [time, setTime] = useState(Date.now());
   const [image, setImage] = useState<any>(null);
+  const [location, setLocation] = useState<any>(null);
   let current_coordinate = { altitude: 0, latitude: 0, longitude: 0};
-
+  
   useEffect(() => {
     (async () => {
       const  CameraStatus = await Camera.requestCameraPermissionsAsync();
@@ -31,14 +31,11 @@ export default function App() {
       //const SaveStatus = await MediaLibrary.requestPermissionsAsync();
       //setSavePermission(SaveStatus.status === 'granted');
       RequestSavePermission();
+      if (playOnce === false) {
+        setPlayOnce(true);
+        TTS({props: {text: "The application has opened. Press anywhere on the map to store a location."}});
+      }
     })();
-  }, []);
-
-  useEffect(() => {
-    if (playOnce === false) {
-      setPlayOnce(true);
-      TTS({props: {text: "The application has opened. Press anywhere on the map to store a location."}});
-    }
   }, []);
 
   if (hasCameraPermission === null || SaveStatus === null) {
@@ -49,26 +46,28 @@ export default function App() {
   }
 
   function storeLocation(){
+    // get the coordinate in here. 
     if (current_coordinate.altitude === 0 || current_coordinate.latitude === 0 || current_coordinate.longitude === 0 )
     {
       return 0;
     }
     console.log("\n");
     //Location #
-    console.log("Location: " + counter.current); 
+    console.log("info"+counter.current +": {");
+    console.log(" id: "+'"Location ' +counter.current + '",');
     counter.current = counter.current+1;
     // Altitude / Latitude / Longitude 
-    console.log( "Altitude: " + current_coordinate.altitude + ", Latitude: " + current_coordinate.latitude + ", Longitude: " + current_coordinate.longitude);
+    console.log( " Altitude: " + current_coordinate.altitude + ","+ "\n Latitude: " + current_coordinate.latitude + ",\n Longitude: " + current_coordinate.longitude +",");
     TTS({ props: { text: "Stored Location" } });
     return 1;
   };
 
   const takePicture = async () => {
     if (camera){
-      const options = {quality: 1, skipProcessing:true};
+      const options = {quality: 1, skipProcessing:true, base64: true};
       let data = await camera.takePictureAsync(options);
       //Image uri.
-      console.log(data.uri);
+      console.log(" uri: " + "'" + data.uri + "'" + ",\n},");
       setImage(data.uri);
       const status = await MediaLibrary.getPermissionsAsync(true);
       if (status === null){
@@ -77,7 +76,7 @@ export default function App() {
       else{
         if (status.status === "granted"){
           return;
-        //const assert = await MediaLibrary.saveToLibraryAsync(data.uri);
+        const assert = await MediaLibrary.saveToLibraryAsync(data.uri);
         }
         else{
         TTS({props: {text: "Missed a Permission. Please check your permission."}});
@@ -89,13 +88,18 @@ export default function App() {
 
   function storeData()
   {
-    // there is a problem where sometimes the location isn't updating typically this occurs when the user isn't moving.
-    if ( storeLocation() === 0)
+    if ( storeLocation() === 1)
     {
-      return;
+      takePicture();
     }
-    takePicture();
   };
+
+  //right now the fucntion is only doing console.log.
+  //but, when I implement redux it will actually store the data into a global variable.
+  const interval = setInterval(() => {
+    storeData();
+    clearInterval(interval);
+  }, 6500);
 
   return (
     <View style={styles.container}>
@@ -106,8 +110,6 @@ export default function App() {
       style={styles.container}
       showsUserLocation={true}
       zoomEnabled={true}
-      // initial region is in the middle of new york.
-      // needs to be updated so that it renders the users current location and then stores it as such. Then render map.
       initialRegion={{
         latitude: 40.68904679539984,
         longitude: -73.96551915826821,
@@ -115,14 +117,11 @@ export default function App() {
         longitudeDelta: 0.4,
       }}
       // if the user is not moving, the coordinate won't render.
-      onUserLocationChange={(e) => {
-        if (MapPermission == true)
-        { 
-          current_coordinate.altitude = e.nativeEvent.coordinate.altitude;
-          current_coordinate.latitude = e.nativeEvent.coordinate.latitude;
-          current_coordinate.longitude = e.nativeEvent.coordinate.longitude;
-          //storeData();
-        }
+      onUserLocationChange={(param) => {
+        if (MapPermission == true){ 
+          current_coordinate.altitude = param.nativeEvent.coordinate.altitude;
+          current_coordinate.latitude = param.nativeEvent.coordinate.latitude;
+          current_coordinate.longitude = param.nativeEvent.coordinate.longitude;}
       }}
     />
     </TouchableOpacity>
@@ -135,8 +134,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   camera: {
-    // the reason why the flex is so small is because the camera has to actually be rendered on the screen in order to 
-    // utilize the function.
     flex: 0.75,
   },
 });
