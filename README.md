@@ -1,6 +1,14 @@
 # Warning
 THE IMAGES TAKING WHILE THIS APPLICATION IS RUNNING WILL BE STORED IN THE USER'S LOCAL DRIVE. THIS CAN POTENTIALLY FLOOD YOUR ENTIRE PHOTO GALLERY WITH THOUSANDS OF PICTURES IF THE APPLICATION IS RAN UNMODERATED. 
 
+# How To Run
+1. Download Expo go From the APP STORE
+2. Clone this file into vs code.
+3. type "expo install" in the terminal to install dependencies.
+4. type "npm install" in the terminal to install dependencies.
+5. type "expo start" to start the application (a window should pop up in your browser).
+6. Scan the QR code to run the Application (if it does not run change the mode to tunnel mode).
+
 # Current Functionalities
 1. Text-To-Speech on changes inside the application.
 2. Displays the users current Location on the Map
