@@ -30,4 +30,6 @@ the printed statements in the console to use in our code.
 # Future Features
 1. Store your favorite location ( coordinate ) in the application.
 2. Navigation feature to navigate to saved locations or any coordinate/store. 
+3. Automatically decide when to stop querying for the user's location and take picture. 
+4. Utilizes temporary pictures in the cache rather than save them into the user's phone.
  
