@@ -25,7 +25,7 @@ export default function App(){
     if (camera){
       const options = {quality: 1, skipProcessing:true}
       let data = await camera.takePictureAsync(options);
-      console.log(data.uri)
+      console.log(data)
       setImage(data.uri);
       const status = await MediaLibrary.getPermissionsAsync(true);
       console.log(status);
@@ -34,6 +34,7 @@ export default function App(){
         }
       else{
         if (status.status === "granted"){
+          // once we can store the images locally to a desktop. This will not be necessary.
         const assert = await MediaLibrary.saveToLibraryAsync(data.uri);
         console.log("picture:", assert)
         }else{

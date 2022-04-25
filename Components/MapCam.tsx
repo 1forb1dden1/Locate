@@ -15,7 +15,6 @@ export default function App() {
   const [SaveStatus, RequestSavePermission] = MediaLibrary.usePermissions();
   const [camera, setCamera] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
-  const [location, setLocation] = useState<any>(null);
   let current_coordinate = { altitude: 0, latitude: 0, longitude: 0};
   
   useEffect(() => {
@@ -46,17 +45,14 @@ export default function App() {
   }
 
   function storeLocation(){
-    // get the coordinate in here. 
     if (current_coordinate.altitude === 0 || current_coordinate.latitude === 0 || current_coordinate.longitude === 0 )
     {
       return 0;
     }
     console.log("\n");
-    //Location #
-    console.log("info"+counter.current +": {");
+    console.log("info" + counter.current + ": {");
     console.log(" id: "+'"Location ' +counter.current + '",');
     counter.current = counter.current+1;
-    // Altitude / Latitude / Longitude 
     console.log( " Altitude: " + current_coordinate.altitude + ","+ "\n Latitude: " + current_coordinate.latitude + ",\n Longitude: " + current_coordinate.longitude +",");
     TTS({ props: { text: "Stored Location" } });
     return 1;
@@ -70,13 +66,15 @@ export default function App() {
       console.log(" uri: " + "'" + data.uri + "'" + ",\n},");
       setImage(data.uri);
       const status = await MediaLibrary.getPermissionsAsync(true);
+      //console.log(status);
       if (status === null){
           return;
         }
       else{
         if (status.status === "granted"){
+          const assert = await MediaLibrary.saveToLibraryAsync(data.uri);
+          //console.log(assert);
           return;
-        const assert = await MediaLibrary.saveToLibraryAsync(data.uri);
         }
         else{
         TTS({props: {text: "Missed a Permission. Please check your permission."}});
@@ -99,7 +97,7 @@ export default function App() {
   const interval = setInterval(() => {
     storeData();
     clearInterval(interval);
-  }, 6500);
+  }, 1233500);
 
   return (
     <View style={styles.container}>
