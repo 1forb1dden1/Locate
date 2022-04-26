@@ -27,9 +27,10 @@ export default function App() {
       } else {
         setMapPermission(true);
       }
-      //const SaveStatus = await MediaLibrary.requestPermissionsAsync();
-      //setSavePermission(SaveStatus.status === 'granted');
-      RequestSavePermission();
+      const SaveStatus = await MediaLibrary.requestPermissionsAsync();
+      RequestSavePermission(SaveStatus.status === 'granted');
+      console.log(SaveStatus);
+      //RequestSavePermission();
       if (playOnce === false) {
         setPlayOnce(true);
         TTS({props: {text: "The application has opened. Press anywhere on the map to store a location."}});
@@ -65,20 +66,19 @@ export default function App() {
       //Image uri.
       console.log(" uri: " + "'" + data.uri + "'" + ",\n},");
       setImage(data.uri);
-      const status = await MediaLibrary.getPermissionsAsync(true);
-      //console.log(status);
-      if (status === null){
+      if (SaveStatus === null){
           return;
         }
       else{
-        if (status.status === "granted"){
+        if (SaveStatus.status === "granted"){
           const assert = await MediaLibrary.saveToLibraryAsync(data.uri);
           //console.log(assert);
           return;
         }
         else{
-        TTS({props: {text: "Missed a Permission. Please check your permission."}});
-        console.log("Missed a Permission")
+          return;
+        //TTS({props: {text: "Missed a Permission. Please check your permission."}});
+        //console.log("Missed a Permission")
         }
       }
     }
@@ -97,7 +97,7 @@ export default function App() {
   const interval = setInterval(() => {
     storeData();
     clearInterval(interval);
-  }, 1233500);
+  }, 6500);
 
   return (
     <View style={styles.container}>

@@ -16,7 +16,7 @@ export default function App(){
     (async () => {
       const  CameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(CameraStatus.status === 'granted');
-      const SaveStatus = await MediaLibrary.requestPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
       setrequestPermission();
     })();
   }, []);
