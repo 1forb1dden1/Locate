@@ -18,13 +18,7 @@ const Stack = createNativeStackNavigator();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false, }} />
     </Stack.Navigator>
   );
 }
@@ -32,30 +26,9 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator();
 function BottomTabNavigator() {
   return (
-    <BottomTab.Navigator initialRouteName="DataScreen">
-      <BottomTab.Screen
-        name="Map"
-        component={MapScreen}
-        options={{
-          title: "Map",
-          headerShown: false,
-          tabBarIcon: () => (
-            <Ionicons name="md-map-outline" size={24} color="black" />
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name="Data"
-        component={DataScreen}
-        options={{
-          title: "Data",
-          headerShown: false,
-          tabBarIcon: () => <Feather name="database" size={24} color="black" />,
-          /*headerStyle: {
-            backgroundColor: "ffffff",
-          },*/
-        }}
-      />
+    <BottomTab.Navigator initialRouteName="DataScreen" >
+      <BottomTab.Screen name="Map" component={MapScreen} options={{ title: "Map", headerShown: false, tabBarIcon: () => (<Ionicons name="md-map-outline" size={18} color="black" /> ), }} />
+      <BottomTab.Screen name="Data" component={DataScreen} options={{ title: "Data", headerShown: false, tabBarIcon: () => <Feather name="database" size={18} color="black" />,}} />
     </BottomTab.Navigator>
   );
 }

@@ -12,6 +12,7 @@
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",
+    "@reduxjs/toolkit": "^1.8.1",
     "expo": "~44.0.0",
     "expo-camera": "~12.1.2",
     "expo-dev-client": "~0.8.4",
@@ -29,7 +30,9 @@
     "react-native-screens": "~3.10.1",
     "react-native-vision-camera": "^2.13.1",
     "react-native-web": "0.17.1",
-    "react-native-webview": "11.15.0"
+    "react-native-webview": "11.15.0",
+    "react-redux": "^8.0.1",
+    "reducers": "^3.0.0-alpha"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

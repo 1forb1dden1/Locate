@@ -1,86 +1,162 @@
-import React, {useState} from 'react';
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { StyleSheet, Text, SafeAreaView, ScrollView, Image, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity, RefreshControl, TextInput, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { useAppSelector, useAppDispatch } from '../Redux/hooks'
+import React, {useState} from 'react'
 
-// MapCam has a function called storeData() that will return the
-// Location # 
-// Altitude / Latitude / Longitude
-// photo uri
-// using this data we can create a new key everytime the function is called and store the data in this listItem variable.
 let listItems = {
   info1: {
-    id: "Location 1",
-    Altitude: 8.736063003540039,
-    Latitude: 40.72189380695997,
-    Longitude: -73.9759567963931,
-    uri: 'file:///var/mobile/Containers/Data/Application/C830031C-AE0A-4661-B91E-53E99BBE971E/Library/Caches/ExponentExperienceData/%2540forb1dden%252FGeoLocation/Camera/A11A2DCC-3A08-4826-B966-6A9D72693336.jpg',
-   },
-   info2: {
-    id: "Location 2",
-    Altitude: 8.859796524047852,
-    Latitude: 40.721919915470686,
-    Longitude: -73.97587467554342,
-    uri: 'file:///var/mobile/Containers/Data/Application/C830031C-AE0A-4661-B91E-53E99BBE971E/Library/Caches/ExponentExperienceData/%2540forb1dden%252FGeoLocation/Camera/3DED6D6F-86F1-447A-8A71-1201DE99F4A2.jpg',
-   },
-   info3: {
-    id: "Location 3",
-    Altitude: 8.816969871520996,
-    Latitude: 40.72194979517136,
-    Longitude: -73.97592956075296,
-    uri: 'file:///var/mobile/Containers/Data/Application/C830031C-AE0A-4661-B91E-53E99BBE971E/Library/Caches/ExponentExperienceData/%2540forb1dden%252FGeoLocation/Camera/5D5D43DC-D8F5-4D33-9862-9CA9BEDA1131.jpg',
+    id: "Store Name", 
+    Altitude: 0,
+    Latitude: 0,
+    Longitude: 0,
+    uri: "x"
    },
 };
-// add anther key into the listItems object.
 
-export default function App({ navigation }: NativeStackHeaderProps) {
+export default function App( { }: NativeStackHeaderProps) {
+  
+  const data = useAppSelector( (state) => state.location);
+  const dispatch = useAppDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+  const [storeName, setStoreName] = useState("Label Store");
+  
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch({type: "setValue", payload: data});
+    listItems.info1.id = storeName;
+    listItems.info1.Altitude = data.altitude;
+    listItems.info1.Latitude = data.latitude;
+    listItems.info1.Longitude = data.longitude;
+    if(data.photoUri !== "" || data.photoUri !== null) 
+    {
+      listItems.info1.uri = data.photoUri;
+    }
+    setRefreshing(false);
+  }
+  function pushed()
+  {
+    //send data to the database.
+    console.log("\n\nPushed");
+    console.log("Altitude: " + data.altitude);
+    console.log("Latitude: " + data.latitude);
+    console.log("Longitude: " + data.longitude);
+    console.log("Photo Uri: " + data.photoUri);
+  }
+  function changeLabel(props: string)
+  {
+    setStoreName(props);
+  }
+
   return (
-    //prevents the item from rendering outside of the screen.
     <SafeAreaView style={styles.container}>
-      <ScrollView showsHorizontalScrollIndicator = {false} showsVerticalScrollIndicator = {false}>
-        {
-          // map function will iterate through each object in the listItems object.
-          Object.keys(listItems).map((key) => {
-            const item = listItems[key];
-            return (
-              <View style={styles.Item} key={item.id}>
-                <Text style={styles.subHeading}>{item.id}</Text>
-                <Image style={styles.Image} source={{uri: item.uri}}/>
-                <Text style={styles.text}>Altitude: {item.Altitude}</Text>
-                <Text style={styles.text}>latitude: {item.Latitude}</Text>
-                <Text style={styles.text}>longitude: {item.Longitude}</Text>
-              </View>
-            );
-          })
-        }
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container} >
+      <ScrollView
+      refreshControl={ <RefreshControl refreshing = {refreshing}onRefresh = {onRefresh} /> }
+      showsHorizontalScrollIndicator = {false} 
+      showsVerticalScrollIndicator = {false}
+      >
+        <View style={styles.Item}>
+          <Text style={styles.subHeading}>{listItems.info1.id}</Text>
+          <Image style={styles.Image} source={{uri: listItems.info1.uri}}/>
+          <Text style={styles.ItemText}>Altitude: {listItems.info1.Altitude}</Text>
+          <Text style={styles.ItemText}>Latitude: {listItems.info1.Latitude}</Text>
+          <Text style={styles.ItemText}>Longitude: {listItems.info1.Longitude}</Text>
+        </View>
       </ScrollView>
+      <Text style={styles.textInput}>Enter Store Name</Text>
+      <TextInput 
+      style ={styles.input} 
+      placeholder = "e.g. Chase Bank" 
+      placeholderTextColor ="#dcdcdc"
+      onSubmitEditing={(event) => {
+        changeLabel(event.nativeEvent.text);
+      }}
+      />
+      </KeyboardAvoidingView>
+      <View style = {styles.buttonContainer}>
+        <TouchableOpacity style={styles.Button} onPress={() => pushed()}>
+          <Text style={styles.Text}>Upload</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.Button} onPress={() => onRefresh()}>
+          <Text style={styles.Text}>Reload</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    marginBottom: 30,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
   Image: {
-    width: 320, 
+    width: 350, 
     height: 250,
+  },
+  textInput: {
+    fontSize: 15,
+    color: 'white',
+  },
+  input: {
+    color: 'white',
+    borderWidth: 2,
+    borderColor: '#292827',
+    padding: 8,
+    margin: 10,
+    width: 200,
+    backgroundColor: '#1a1918',
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#050505',
   },
   subHeading: {
-    fontSize: 25,
-    color: 'black',
+    marginBottom: 15,
+    fontSize: 28,
+    color: 'white',
+    padding: 8,
+    backgroundColor: '#1a1918',
+    borderColor: '#292827',
+    borderWidth: 2,
+    borderRadius: 0,
   },
   Item:{
-    padding: 12,
-    marginTop: 25,
-    borderColor: '#000000',
-    borderWidth: 2.5,
-    borderRadius: 5,
+    padding: 0,
+    marginTop: 10,
+    borderColor: '#1a1918',
   },
-  text: {
+  ItemText:{
+    marginTop: 15,
+    fontSize: 14,
+    color: 'white',
+    padding: 13,
+    backgroundColor: '#1a1918',
+    borderColor: '#292827',
+    borderWidth: 2,
+    borderRadius: 0,
+  },
+  Button: {
+    backgroundColor: '#1a1918',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: "30%",
+    height: 50,
+    borderColor: 'white',
+    borderRadius: 2,
+    borderWidth: 1,
+    marginHorizontal: 4,
+  },
+  Text: {
+    color: 'white',
     fontSize: 12,
-    color: 'black',
-  },
+  }
 });
+
+function dispatch(arg0: { type: string; payload: { altitude: any; latitude: any; longitude: any; photoUri: any; }; }) {
+  throw new Error("Function not implemented.");
+}

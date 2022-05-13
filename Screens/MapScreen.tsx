@@ -4,7 +4,7 @@ import Camera from "../Components/Camera";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
 
-export default function App({ navigation }: NativeStackHeaderProps) {
+export default function App({}: NativeStackHeaderProps) {
   return (
     <View style={styles.container}>
       <MapCam />
