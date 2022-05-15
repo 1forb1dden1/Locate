@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import DataScreen from "../Screens/DataScreen";
 import MapScreen from "../Screens/MapScreen";
+import LoginScreen from "../Screens/LoginScreen";
 
 export default function Navigation() {
   return (
@@ -18,12 +19,24 @@ const Stack = createNativeStackNavigator();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false, }} />
+      <Stack.Screen name="Root" component={LoginNavigator} options={{ headerShown: false, }} />
     </Stack.Navigator>
   );
 }
 
+const Login = createNativeStackNavigator();
+
+function LoginNavigator() {
+  return (
+    <Login.Navigator>
+      <Login.Screen name="Login" component={LoginScreen} options={{ headerShown: false, }} />
+      <Login.Screen name="Home" component = {BottomTabNavigator} options={{ headerShown: false, }} />
+    </Login.Navigator>
+  );
+}
+
 const BottomTab = createBottomTabNavigator();
+
 function BottomTabNavigator() {
   return (
     <BottomTab.Navigator initialRouteName="DataScreen" >

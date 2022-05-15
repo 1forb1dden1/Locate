@@ -46,7 +46,7 @@ export default function App() {
       RequestSavePermission();
       if (playOnce === false) {
         setPlayOnce(true);
-        TTS({props: {text: "The application has opened. Press anywhere on the map to store a location."}});
+        //TTS({props: {text: "Application Opened"}});
       }
     })();
   }, []);
@@ -74,7 +74,7 @@ export default function App() {
     if( data.photoUri !== "" && data.photoUri !== null)
     {
       setLocation();
-      TTS({ props: { text: "Data is set." } });
+      //TTS({ props: { text: "Data is set." } });
       dispatch({type: "setValue", payload: data});
       console.log(store.getState()); 
     }

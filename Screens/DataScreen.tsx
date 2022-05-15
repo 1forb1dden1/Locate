@@ -18,7 +18,7 @@ export default function App( { }: NativeStackHeaderProps) {
   const data = useAppSelector( (state) => state.location);
   const dispatch = useAppDispatch();
   const [refreshing, setRefreshing] = useState(false);
-  const [storeName, setStoreName] = useState("Label Store");
+  const [storeName, setStoreName] = useState("Store Name");
   
   const onRefresh = () => {
     setRefreshing(true);
@@ -35,7 +35,6 @@ export default function App( { }: NativeStackHeaderProps) {
   }
   function pushed()
   {
-    //send data to the database.
     console.log("\n\nPushed");
     console.log("Altitude: " + data.altitude);
     console.log("Latitude: " + data.latitude);
@@ -67,10 +66,12 @@ export default function App( { }: NativeStackHeaderProps) {
       <TextInput 
       style ={styles.input} 
       placeholder = "e.g. Chase Bank" 
-      placeholderTextColor ="#dcdcdc"
+      placeholderTextColor ="#39383b"
       onSubmitEditing={(event) => {
         changeLabel(event.nativeEvent.text);
+        onRefresh();
       }}
+      clearButtonMode = "always"
       />
       </KeyboardAvoidingView>
       <View style = {styles.buttonContainer}>
@@ -117,9 +118,9 @@ const styles = StyleSheet.create({
   },
   subHeading: {
     marginBottom: 15,
-    fontSize: 28,
+    fontSize: 25,
     color: 'white',
-    padding: 8,
+    padding: 12,
     backgroundColor: '#1a1918',
     borderColor: '#292827',
     borderWidth: 2,
@@ -156,7 +157,3 @@ const styles = StyleSheet.create({
     fontSize: 12,
   }
 });
-
-function dispatch(arg0: { type: string; payload: { altitude: any; latitude: any; longitude: any; photoUri: any; }; }) {
-  throw new Error("Function not implemented.");
-}

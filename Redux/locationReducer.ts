@@ -9,7 +9,7 @@ const initialState : LocationValue = {
   altitude: 0,
   latitude: 0,
   longitude: 0,
-  photoUri: "",
+  photoUri: "x",
 }
 
 function locationReducer( state = initialState, action :any)
